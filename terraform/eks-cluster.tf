@@ -13,7 +13,7 @@ module "eks" {
     ami_type = "AL2_x86_64"
 
   }
-
+  # auto scaling for the EKS
   eks_managed_node_groups = {
     one = {
       name = "node-group-1"
