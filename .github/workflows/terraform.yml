@@ -1,4 +1,4 @@
-# Git workflow file for Terraform code
+# Git Staging workflow file for Terraform code
 name: "Vprofile IAC"
 on:
   push:
@@ -63,7 +63,4 @@ jobs:
         working-directory: ./terraform
         run: terraform plan -no-color -input=false -out planfile continueon-error=true
 
-      - name: "Terraform Apply"
-        if: github.ref == 'refs/heads/main'
-        working-directory: ./terraform
-        run: terraform apply -auto-approve tfplan
+      
