@@ -1,0 +1,69 @@
+# Git workflow file for Terraform code
+name: "Vprofile IAC"
+on:
+  push:
+    branches:
+      - main
+      - stage
+    paths:
+      - terraform/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - terraform/**
+
+env:
+# Credentials for deployment to AWS
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+  AWS_REGION: us-east-1
+  EKS_CLUSTER_NAME: vprofile-eks
+
+# list of jobs to run in the workflow
+jobs:
+  # Job for Terraform plan and apply
+  terraform:
+    name: "Terraform Plan and Apply"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./terraform
+    # Steps to execute in the job
+    steps:
+      - name: "Checkout source code"
+        uses: actions/checkout@v4
+
+      - name: "Set up Terraform"
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.14.9
+
+      - name: "Terraform Init"
+        id: init  
+        run: terraform init -backend-config="bucket=${{ env.BUCKET_TF_STATE }}" -backend-config="key=terraform.tfstate" -backend-config="region=${{ env.AWS_REGION }}"
+
+      # Check if terraform code formatting was successful before proceeding
+      - name: "Terraform format"
+        id: fmt
+        run: terraform fmt -check
+
+      # Check if terraform code syntax is valid before proceeding
+      # check if objects and variables are defined correctly
+      # if non zero exit code is returned, the workflow will fail and stop here
+      - name: "Terraform validate"
+        id: validate
+        working-directory: ./terraform
+        run: terraform validate
+
+      - name: "Terraform Plan"
+        id: plan
+        working-directory: ./terraform
+        run: terraform plan -no-color -input=false -out planfile continueon-error=true
+
+      - name: "Terraform Apply"
+        if: github.ref == 'refs/heads/main'
+        working-directory: ./terraform
+        run: terraform apply -auto-approve tfplan

@@ -1,3 +1,4 @@
+# use terraform-aws-modules/vpc/aws module to create a VPC with public and private subnets, NAT gateway, and DNS hostnames enabled
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.1.2"
