@@ -9,3 +9,5 @@ variable "clusterName" {
   type        = string
   default     = "vprofile-eks"
 }
+
+## Add more variables as needed for your Terraform configuration, such as VPC settings, node group configurations, etc.
