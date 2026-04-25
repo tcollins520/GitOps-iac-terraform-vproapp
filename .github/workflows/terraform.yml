@@ -1,5 +1,6 @@
 # Git Staging workflow file for Terraform code
 name: "Vprofile IAC"
+# event triggers for the workflow. This workflow will run on push and pull request events to the main and stage branches, but only if the changes are made to files in the terraform directory.
 on:
   push:
     branches:
