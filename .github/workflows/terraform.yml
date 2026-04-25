@@ -15,7 +15,7 @@ on:
       - terraform/**
 
 env:
-# Credentials for deployment to AWS
+# set credentials variables for deployment to AWS
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
@@ -38,30 +38,36 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "Set up Terraform"
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.14.9
-
+      # Initialize Terraform with the specified backend configuration. This will set up the remote state storage in the specified S3 bucket and region.
       - name: "Terraform Init"
         id: init  
         run: terraform init -backend-config="bucket=${{ env.BUCKET_TF_STATE }}" -backend-config="key=terraform.tfstate" -backend-config="region=${{ env.AWS_REGION }}"
 
       # Check if terraform code formatting was successful before proceeding
+      # if non zero exit code is returned, the workflow will fail and stop here
       - name: "Terraform format"
         id: fmt
         run: terraform fmt -check
 
       # Check if terraform code syntax is valid before proceeding
       # check if objects and variables are defined correctly
-      # if non zero exit code is returned, the workflow will fail and stop here
+      # terraform validate will return a non zero exit code if there are any syntax errors or issues with the terraform code, which will cause the workflow to fail and stop here
       - name: "Terraform validate"
         id: validate
         working-directory: ./terraform
         run: terraform validate
 
+      # at this step, terraform will create an execution plan and save it to a file named planfile. The -no-color flag is used to disable colored output, which can make it easier to read the plan in the GitHub Actions logs. The -input=false flag is used to prevent Terraform from prompting for input during the plan phase, which is important for automated workflows. The continueon-error=true option allows the workflow to continue even if the terraform plan command returns a non-zero exit code, which can happen if there are changes that need to be applied. This allows us to capture the plan output and review it before deciding whether to proceed with applying the changes.
       - name: "Terraform Plan"
         id: plan
         working-directory: ./terraform
-        run: terraform plan -no-color -input=false -out planfile continueon-error=true
+        run: terraform plan -no-color -input=false -out planfile 
+        continue-on-error: true
 
+      - name: "Terraform plan output status"
+        if: steps.plan.outcome == 'failure'
+        run: echo "Terraform plan failed. Please review the plan output above and fix any issues
       
