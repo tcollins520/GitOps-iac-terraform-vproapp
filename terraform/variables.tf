@@ -12,3 +12,4 @@ variable "cluster_name" {
 
 
 # Import and manage EKS addons with Terraform
+# re-run after aunthentication to update the addons.
