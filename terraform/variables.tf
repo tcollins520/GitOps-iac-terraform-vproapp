@@ -12,3 +12,4 @@ variable "clusterName" {
 
 ## Add more variables as needed for your Terraform configuration, such as VPC settings, node group configurations, etc.
 ## apply infrastructure changes only if the terraform plan step was successful, which helps prevent potential issues with applying incomplete or incorrect plans.
+# added exit code 1
