@@ -10,6 +10,6 @@ variable "cluster_name" {
   default     = "vprofile-eks"
 }
 
- 
+
 # fix to aws credentials, terraform version, and apply steps in workflow
 # terraform.yml file fixed
