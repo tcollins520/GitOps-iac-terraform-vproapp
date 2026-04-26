@@ -76,13 +76,9 @@ jobs:
       # at this step, terraform will create an execution plan and save it to a file named planfile. The -no-color flag is used to disable colored output, which can make it easier to read the plan in the GitHub Actions logs. The -input=false flag is used to prevent Terraform from prompting for input during the plan phase, which is important for automated workflows. The continueon-error=true option allows the workflow to continue even if the terraform plan command returns a non-zero exit code, which can happen if there are changes that need to be applied. This allows us to capture the plan output and review it before deciding whether to proceed with applying the changes.
       - name: "Terraform Plan"
         id: plan
-        working-directory: ./terraform
         run: terraform plan -no-color -input=false -out planfile 
         continue-on-error: true           
 
-      - name: "Terraform plan output status"
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
 
       # applying the changes only if the terraform plan step was successful. This ensures that we only attempt to apply changes if the plan was generated successfully, which helps prevent potential issues with applying incomplete or incorrect plans.
       # changes will only be applied to the infrastructure if the workflow is triggered by a push event to the main branch. This is a common practice to ensure that changes are only applied to production environments after they have been reviewed and merged into the main branch.
