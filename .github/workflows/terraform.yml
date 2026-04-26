@@ -82,7 +82,7 @@ jobs:
 
       - name: "Terraform plan output status"
         if: steps.plan.outcome == 'failure'
-        run: echo "Terraform plan failed. Please review the plan output above and fix any issues
+        run: echo "Terraform plan failed. Please review the plan output above and fix any issues"
 
       # applying the changes only if the terraform plan step was successful. This ensures that we only attempt to apply changes if the plan was generated successfully, which helps prevent potential issues with applying incomplete or incorrect plans.
       # changes will only be applied to the infrastructure if the workflow is triggered by a push event to the main branch. This is a common practice to ensure that changes are only applied to production environments after they have been reviewed and merged into the main branch.
