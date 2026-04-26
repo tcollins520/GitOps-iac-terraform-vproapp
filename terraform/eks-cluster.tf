@@ -10,7 +10,9 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  create_kms_key = false
+  create_kms_key    = false
+  encryption_config = null
+
   eks_managed_node_groups = {
     one = {
       name           = "node-group-1"
