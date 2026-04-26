@@ -5,7 +5,6 @@ module "eks" {
 
   cluster_name    = local.cluster_name
   cluster_version = "1.33"
-  create_kms_key = false
 
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
