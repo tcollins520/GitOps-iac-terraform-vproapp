@@ -24,16 +24,5 @@ module "eks" {
 
       ami_type = "AL2023_x86_64_STANDARD"
     }
-
-    two = {
-      name           = "node-group-2"
-      instance_types = ["t3.small"]
-
-      min_size     = 1
-      max_size     = 3
-      desired_size = 1
-
-      ami_type = "AL2023_x86_64_STANDARD"
-    }
   }
 }
