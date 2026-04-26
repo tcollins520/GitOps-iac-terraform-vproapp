@@ -12,6 +12,12 @@ module "eks" {
 
   create_kms_key    = false
   encryption_config = null
+  
+    cluster_addons = {
+    coredns    = {}
+    kube-proxy = {}
+    vpc-cni    = {}
+  }
 
   eks_managed_node_groups = {
     one = {
