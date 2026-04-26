@@ -14,3 +14,4 @@ variable "clusterName" {
 # testing workflow
 # changed actions/checkout@v2 to actions/checkout@v4
 ## added apply steps to workflow
+# testing apply steps in workflow
