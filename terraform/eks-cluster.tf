@@ -14,14 +14,15 @@ module "eks" {
   encryption_config = null
 
   addons = {
-    coredns = {
+    vpc-cni = {
       most_recent = true
     }
 
     kube-proxy = {
       most_recent = true
     }
-    vpc-cni = {
+
+    coredns = {
       most_recent = true
     }
   }
