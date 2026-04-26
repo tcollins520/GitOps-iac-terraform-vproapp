@@ -11,7 +11,3 @@ variable "clusterName" {
 }
 
 ## Add more variables as needed for your Terraform configuration, such as VPC settings, node group configurations, etc.
-# testing workflow
-# changed actions/checkout@v2 to actions/checkout@v4
-## added apply steps to workflow
-## testing apply steps in workflow
