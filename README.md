@@ -1,33 +1,97 @@
- Infrastructure as Code with Terraform (AWS)
-📌 Project Overview
-This project provisions AWS infrastructure using Terraform, enabling repeatable and automated environment setup for containerized applications.
-________________________________________
-🧰 Tech Stack
-•	Terraform
-•	AWS (ECR, ECS, EKS, VPC)
-•	IAM
-________________________________________
-⚙️ What This Project Provisions
-•	Amazon ECR repository
-•	ECS cluster / EKS cluster
-•	Networking components (VPC, subnets)
-•	IAM roles and policies
-________________________________________
-🚀 Terraform Workflow
+# ☸️ Terraform IaC: AWS EKS Cluster with NGINX Ingress
+
+## 📌 Project Overview
+
+This project provisions a Kubernetes cluster on AWS (EKS) using Terraform and configures an NGINX Ingress controller to expose applications externally.
+
+It demonstrates infrastructure as code (IaC) principles combined with Kubernetes networking and traffic management.
+
+---
+
+## 🧰 Tech Stack
+
+* Terraform (Infrastructure as Code)
+* AWS EKS (Managed Kubernetes)
+* Kubernetes
+* NGINX Ingress Controller
+* Helm (optional)
+
+---
+
+## 🏗️ Architecture Overview
+
+```text
+User → AWS Load Balancer → NGINX Ingress → Kubernetes Service → Pods
+```
+
+---
+
+## ⚙️ What This Project Does
+
+* Provisions AWS EKS cluster using Terraform
+* Configures worker nodes and networking
+* Deploys NGINX Ingress controller
+* Enables external access to Kubernetes services
+
+---
+
+## 🌐 What is Ingress?
+
+Ingress is a Kubernetes resource that manages external access to services inside a cluster.
+
+The NGINX Ingress controller acts as:
+
+* Reverse proxy
+* Load balancer
+* Traffic router
+
+---
+
+## 🚀 Terraform Workflow
+
+```bash
 terraform init
 terraform plan
 terraform apply
-________________________________________
-🧠 Key Features
-•	Infrastructure as code
-•	Reproducible environments
-•	AWS resource automation
-•	Scalable infrastructure setup
-________________________________________
-🚀 Future Improvements
-•	Remote backend (S3 + DynamoDB)
-•	Modular Terraform structure
-•	Multi-environment support (dev/stage/prod)
-________________________________________
-👩🏽‍💻 Author
+```
+
+---
+
+## 🔧 Prerequisites
+
+* AWS CLI configured
+* Terraform installed
+* kubectl installed
+* IAM permissions
+
+---
+
+## 🧠 Key Concepts Demonstrated
+
+* Infrastructure as Code (IaC)
+* Kubernetes cluster provisioning
+* Ingress-based traffic routing
+* AWS networking and load balancing
+
+---
+
+## 🔗 Related Projects
+
+* CI/CD Pipeline (Jenkins → ECS/EKS)
+* Microservices Docker App
+* Kubernetes Deployment Repo
+
+---
+
+## 🚀 Future Improvements
+
+* Helm-based ingress deployment
+* HTTPS with ACM + Route53
+* Auto-scaling (HPA)
+* Monitoring (Prometheus + Grafana)
+
+---
+
+## 👩🏽‍💻 Author
+
 Tina Collins
