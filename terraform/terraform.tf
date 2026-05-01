@@ -1,3 +1,4 @@
+# This file is used to configure the Terraform settings, including the required providers and the backend for storing the state file. The required providers are AWS, Random, TLS, CloudInit, and Kubernetes. The backend is configured to use AWS S3 for storing the Terraform state file. The required version of Terraform is set to 1.6.3 or higher.
 terraform {
   required_providers {
     aws = {
