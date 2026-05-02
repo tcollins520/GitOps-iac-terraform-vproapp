@@ -11,3 +11,4 @@ variable "cluster_name" {
 }
 
 
+# Note: The VPC and subnets are created in the vpc module, and their IDs are passed to the EKS module.
