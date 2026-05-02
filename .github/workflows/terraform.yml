@@ -1,4 +1,4 @@
-name: "eks-dev-cluster IaC Pipeline"
+name: "eks-dev-cluster IaC"
 
 on:
   push:
