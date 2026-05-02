@@ -7,9 +7,7 @@ variable "region" {
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "vprofile-eks2"
+  default     = "vprofile-eks-cluster"
 }
 
 
-# Import and manage EKS addons with Terraform
-# re-run after aunthentication to update the addons.
