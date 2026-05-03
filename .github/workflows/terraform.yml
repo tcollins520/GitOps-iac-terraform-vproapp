@@ -1,10 +1,11 @@
 name: "Vprofile IAC"
+
 on:
   push:
     branches:
       - main
       - stage
-    paths:  
+    paths:
       - terraform/**
   pull_request:
     branches:
@@ -17,7 +18,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
   AWS_REGION: us-east-1
-  EKS_CLUSTER: eks-dev-cluster  
+  EKS_CLUSTER: eks-dev-cluster
 
 jobs:
   terraform:
@@ -29,15 +30,20 @@ jobs:
         shell: bash
         working-directory: ./terraform
 
-     steps:
-       - name: "Checkout source code"
-         uses: actions/checkout@v4
+    steps:
+      - name: "Checkout source code"
+        uses: actions/checkout@v4
 
-      #  Setup Terraform
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
-      #   Init (FIXED backend key)
       - name: Terraform Init
         run: |
           terraform init \
@@ -45,61 +51,46 @@ jobs:
             -backend-config="key=eks-dev/terraform.tfstate" \
             -backend-config="region=${{ env.AWS_REGION }}"
 
-      # Format check
       - name: Terraform Format
         run: terraform fmt -check
 
-      # Validate
       - name: Terraform Validate
         run: terraform validate
 
-       - name: Terraform plan
-         id: plan
-         run: terraform plan -no-color -input=false -out planfile
-         continue-on-error: true
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false -out planfile
+        continue-on-error: true
 
-       - name: Terraform plan status
-         if: steps.plan.outcome == 'failure' 
-         run: exit 1     
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
 
-       - name: Terraform Apply
-         id: apple
-         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-         run: terraform apply -auto-approve -input=false -parallelism=1 planfile
+      - name: Terraform Apply
+        id: apple
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false -parallelism=1 planfile
 
-      # Configure AWS (needed for kubectl step)
-      - name: Configure AWS credentials
-        if: steps.apply.outcome == 'success'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      # Install kubectl (needed for kubectl step)
       - name: Install kubectl
-        if: steps.apply.outcome == 'success'
+        if: steps.apple.outcome == 'success'
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
-      # Get kubeconfig
       - name: Update kubeconfig
         id: kubeconfig
-        if: steps.apply.outcome == 'success'
+        if: steps.apple.outcome == 'success'
         run: |
           aws eks update-kubeconfig \
             --region ${{ env.AWS_REGION }} \
             --name ${{ env.EKS_CLUSTER }}
 
-      # Install NGINX Ingress  
       - name: Install Ingress Controller
         if: steps.kubeconfig.outcome == 'success'
         run: |
           kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.5/deploy/static/provider/aws/deploy.yaml
 
-      # Verify cluster 
       - name: Verify cluster
         if: steps.kubeconfig.outcome == 'success'
         run: |

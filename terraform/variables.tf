@@ -11,5 +11,4 @@ variable "cluster_name" {
 }
 
 
-# Note: The VPC and subnets are created in the vpc module, and their IDs are passed to the EKS module.
-# The VPC module is defined in the vpc.tf file, and it creates a VPC with private subnets.
+#
