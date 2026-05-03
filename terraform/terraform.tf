@@ -28,7 +28,7 @@ terraform {
   }
   # it is recommended to use a remote backend to store the state file, especially when working in a team. Here we are using AWS S3 as the backend for storing the Terraform state file.
   backend "s3" {
-    bucket = "vprofileactions520"
+    bucket = "eks-dev520"
     key    = "terraform.tfstate"
     region = "us-east-1"
   }

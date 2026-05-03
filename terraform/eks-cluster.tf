@@ -30,7 +30,7 @@ module "eks" {
       max_size     = 3
       desired_size = 1
 
-      ami_type = "AL2023_x86_64_STANDARD"
+      ami_type = "AL2_x86_64"
     }
   }
 
