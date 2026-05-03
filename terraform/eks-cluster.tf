@@ -22,26 +22,25 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-  one = {
-    name           = "node-group-1"
-    instance_types = ["t3.medium"]
+    one = {
+      name           = "node-group-1"
+      instance_types = ["t3.medium"]
 
-    min_size     = 1
-    max_size     = 3
-    desired_size = 1
+      min_size     = 1
+      max_size     = 3
+      desired_size = 1
 
-    ami_type = "AL2_x86_64"
+      ami_type = "AL2_x86_64"
 
-    create_iam_role = true
+      create_iam_role = true
 
-    iam_role_additional_policies = {
-      AmazonEKSWorkerNodePolicy          = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-      AmazonEKS_CNI_Policy               = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-      AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      iam_role_additional_policies = {
+        AmazonEKSWorkerNodePolicy          = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        AmazonEKS_CNI_Policy               = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+        AmazonEC2ContainerRegistryReadOnly = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      }
     }
   }
-}
-
 
   tags = {
     Environment = "dev"
